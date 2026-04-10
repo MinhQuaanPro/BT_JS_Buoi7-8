@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài Tập Mảng - JavaScript</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background shapes */
+        body::before,
+        body::after {
+            content: '';
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            z-index: -1;
+        }
+
+        body::before {
+            width: 400px;
+            height: 400px;
+            background: #ff6b6b;
+            top: -100px;
+            right: -100px;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        body::after {
+            width: 300px;
+            height: 300px;
+            background: #4ecdc4;
+            bottom: -50px;
+            left: -50px;
+            animation: float 10s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(30px, -30px) scale(1.1); }
+        }
+
+        /* Header */
+        .main-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        .main-header h1 {
+            color: white;
+            font-size: 3rem;
+            font-weight: 700;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2.5rem;
+            border-radius: 20px;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Glass Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        /* Warning Box */
+        .warning-box {
+            background: linear-gradient(135deg, #fff5e6 0%, #ffe8cc 100%);
+            border-left: 5px solid #ff9f43;
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: #d35400;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(255, 159, 67, 0.2);
+            animation: slideInLeft 0.5s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Input Section */
+        .input-wrapper {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+            border: 2px solid #dee2e6;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .input-label {
+            font-weight: 700;
+            color: #495057;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .custom-input-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .custom-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: 3px solid #dee2e6;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-family: 'Space Grotesk', sans-serif;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .custom-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 5px rgba(102, 126, 234, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 16px;
+            padding: 1rem 2.5rem;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-add:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-add:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+
+        /* Array Display */
+        .array-show {
+            background: white;
+            border: 3px dashed #ced4da;
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            font-family: 'Courier New', monospace;
+            color: #667eea;
+            font-weight: 600;
+            font-size: 1.05rem;
+            min-height: 55px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .array-show:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        /* Accordion Custom */
+        .custom-accordion {
+            margin-top: 2rem;
+        }
+
+        .accordion-item-custom {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 16px !important;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .accordion-item-custom:hover {
+            border-color: #667eea;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+            transform: translateX(5px);
+        }
+
+        .accordion-header-custom {
+            margin: 0;
+        }
+
+        .accordion-btn-custom {
+            background: white;
+            border: none;
+            padding: 1.5rem 2rem;
+            font-weight: 700;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.05rem;
+        }
+
+        .accordion-btn-custom:not(.collapsed) {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .accordion-btn-custom:hover {
+            background: #f8f9fa;
+        }
+
+        .accordion-btn-custom:not(.collapsed):hover {
+            background: linear-gradient(135deg, #5568d3 0%, #6a3f91 100%);
+        }
+
+        .number-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .accordion-btn-custom:not(.collapsed) .number-badge {
+            background: rgba(255,255,255,0.25);
+            box-shadow: none;
+        }
+
+        .accordion-body-custom {
+            padding: 2rem;
+            background: #fafbfc;
+            border-top: 2px solid #e9ecef;
+        }
+
+        /* Hint Box */
+        .hint-container {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-left: 5px solid #2196f3;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            color: #1565c0;
+            font-weight: 500;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        /* Execute Button */
+        .btn-run {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            border: none;
+            border-radius: 14px;
+            padding: 1rem 2rem;
+            color: white;
+            font-weight: 700;
+            font-size: 1.05rem;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(0, 184, 148, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-run:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0, 184, 148, 0.5);
+        }
+
+        /* Result Box */
+        .result-container {
+            background: white;
+            border-left: 5px solid #667eea;
+            border-radius: 14px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: #2d3748;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            animation: slideInUp 0.4s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Footer Actions */
+        .action-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 3px solid #e9ecef;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .btn-clear {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-clear:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.5);
+        }
+
+        .btn-reset {
+            background: #6c757d;
+            border: none;
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-reset:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .counter-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.5rem 1.25rem;
+            border-radius: 20px;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-header h1 {
+                font-size: 1.75rem;
+                padding: 0.75rem 1.5rem;
+            }
+
+            .glass-card {
+                padding: 1.5rem;
+            }
+
+            .custom-input-group {
+                flex-direction: column;
+            }
+
+            .btn-add {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .accordion-btn-custom {
+                padding: 1.25rem 1.5rem;
+                font-size: 0.95rem;
+            }
+
+            .number-badge {
+                width: 32px;
+                height: 32px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Loading animation */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .loading {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="main-header">
+        <h1>
+            <span>📊</span>
+            <span>Bài Tập Mảng</span>
+        </h1>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <div class="glass-card">
+            
+            <!-- Warning -->
+            <div class="warning-box">
+                <span style="font-size: 1.5rem;">⚠️</span>
+                <div><strong>Lưu ý:</strong> Bài tập Javascript Cybersoft BC93 Buổi 7-8.</div>
+            </div>
+
+            <!-- Input Section -->
+            <div class="input-wrapper">
+                <div class="input-label">
+                    <span>📥</span>
+                    <span>Nhập số vào mảng</span>
+                </div>
+                <div class="custom-input-group">
+                    <input type="number" class="custom-input" id="inputNum" placeholder="Ví dụ: 5, -3, 10...">
+                    <button class="btn-add" type="button" onclick="getNumber()">
+                        <span>➕</span>
+                        <span>Thêm</span>
+                    </button>
+                </div>
+                <div class="array-show">
+                    <strong>📋 Mảng:</strong>&nbsp;
+                    <span id="txtArray" style="margin-left: 0.5rem;">Chưa có dữ liệu</span>
+                </div>
+            </div>
+
+            <!-- Accordion -->
+            <div class="custom-accordion">
+                
+                <!-- Bài 1 -->
+                <div class="accordion-item-custom">
+                    <h2 class="accordion-header-custom">
+                        <button class="accordion-btn-custom collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ex1">
+                            <span class="number-badge">1</span>
+                            <span>Tổng các số dương</span>
+                        </button>
+                    </h2>
+                    <div id="ex1" class="collapse" data-bs-parent=".custom-accordion">
+                        <div class="accordion-body-custom">
+                            <div class="hint-container">
+                                <span>💡</span>
+                                <div><strong>Gợi ý:</strong> Duyệt mảng, cộng dồn các phần tử > 0</div>
+                            </div>
+                            <button class="btn-run" onclick="sumPositive()">
+                                <span>🧮</span>
+                                <span>Tính tổng</span>
+                            </button>
+                            <div class="result-container">
+                                <span id="txtSum">Kết quả sẽ hiển thị ở đây...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bài 2 -->
+                <div class="accordion-item-custom">
+                    <h2 class="accordion-header-custom">
+                        <button class="accordion-btn-custom collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ex2">
+                            <span class="number-badge">2</span>
+                            <span>Đếm số lượng số dương</span>
+                        </button>
+                    </h2>
+                    <div id="ex2" class="collapse" data-bs-parent=".custom-accordion">
+                        <div class="accordion-body-custom">
+                            <div class="hint-container">
+                                <span>💡</span>
+                                <div><strong>Gợi ý:</strong> Dùng biến đếm, tăng khi gặp phần tử > 0</div>
+                            </div>
+                            <button class="btn-run" onclick="countPositive()">
+                                <span>🔢</span>
+                                <span>Đếm ngay</span>
+                            </button>
+                            <div class="result-container">
+                                <span id="txtCount">Kết quả sẽ hiển thị ở đây...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bài 3 -->
+                <div class="accordion-item-custom">
+                    <h2 class="accordion-header-custom">
+                        <button class="accordion-btn-custom collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ex3">
+                            <span class="number-badge">3</span>
+                            <span>Tìm số nhỏ nhất</span>
+                        </button>
+                    </h2>
+                    <div id="ex3" class="collapse" data-bs-parent=".custom-accordion">
+                        <div class="accordion-body-custom">
+                            <div class="hint-container">
+                                <span>💡</span>
+                                <div><strong>Gợi ý:</strong> Giả sử phần tử đầu là min, so sánh và cập nhật</div>
+                            </div>
+                            <button class="btn-run" onclick="findMin()">
+                                <span>🔍</span>
+                                <span>Tìm ngay</span>
+                            </button>
+                            <div class="result-container">
+                                <span id="txtMin">Kết quả sẽ hiển thị ở đây...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bài 4 -->
+                <div class="accordion-item-custom">
+                    <h2 class="accordion-header-custom">
+                        <button class="accordion-btn-custom collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ex4">
+                            <span class="number-badge">4</span>
+                            <span>Tìm số dương nhỏ nhất</span>
+                        </button>
+                    </h2>
+                    <div id="ex4" class="collapse" data-bs-parent=".custom-accordion">
+                        <div class="accordion-body-custom">
+                            <div class="hint-container">
+                                <span>💡</span>
+                                <div><strong>Gợi ý:</strong> Lọc mảng số dương → tìm min trong đó</div>
+                            </div>
+                            <button class="btn-run" onclick="findMinPos()">
+                                <span>🎯</span>
+                                <span>Tìm ngay</span>
+                            </button>
+                            <div class="result-container">
+                                <span id="txtMinPos">Kết quả sẽ hiển thị ở đây...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bài 5 -->
+                <div class="accordion-item-custom">
+                    <h2 class="accordion-header-custom">
+                        <button class="accordion-btn-custom collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ex5">
+                            <span class="number-badge">5</span>
+                            <span>Tìm số chẵn cuối cùng</span>
+                        </button>
+                    </h2>
+                    <div id="ex5" class="collapse" data-bs-parent=".custom-accordion">
+                        <div class="accordion-body-custom">
+                            <div class="hint-container">
+                                <span>💡</span>
+                                <div><strong>Gợi ý:</strong> Duyệt từ đầu, cập nhật biến khi gặp số chẵn</div>
+                            </div>
+                            <button class="btn-run" onclick="findEven()">
+                                <span>🔎</span>
+                                <span>Tìm ngay</span>
+                            </button>
+                            <div class="result-container">
+                                <span id="txtEven">Kết quả sẽ hiển thị ở đây...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bài 6 -->
+                <div class="accordion-item-custom">
+                    <h2 class="accordion-header-custom">
+                        <button class="accordion-btn-custom collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ex6">
+                            <span class="number-badge">6</span>
+                            <span>Đổi chỗ 2 phần tử</span>
+                        </button>
+                    </h2>
+                    <div id="ex6" class="collapse" data-bs-parent=".custom-accordion">
+                        <div class="accordion-body-custom">
+                            <div class="hint-container">
+                                <span>💡</span>
+                                <div><strong>Gợi ý:</strong> Dùng biến tạm để swap 2 vị trí</div>
+                            </div>
+                            <div class="row g-3 mb-3">
+                                <div class="col-6">
+                                    <input type="number" class="custom-input" id="inputIndex1" placeholder="Vị trí 1" style="padding: 0.875rem 1rem;">
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" class="custom-input" id="inputIndex2" placeholder="Vị trí 2" style="padding: 0.875rem 1rem;">
+                                </div>
+                            </div>
+                            <button class="btn-run" onclick="changePosition()">
+                                <span>🔀</span>
+                                <span>Đổi chỗ</span>
+                            </button>
+                            <div class="result-container">
+                                <span id="txtChangePos">Kết quả sẽ hiển thị ở đây...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bài 7 -->
+                <div class="accordion-item-custom">
+                    <h2 class="accordion-header-custom">
+                        <button class="accordion-btn-custom collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ex7">
+                            <span class="number-badge">7</span>
+                            <span>Sắp xếp tăng dần</span>
+                        </button>
+                    </h2>
+                    <div id="ex7" class="collapse" data-bs-parent=".custom-accordion">
+                        <div class="accordion-body-custom">
+                            <div class="hint-container">
+                                <span>💡</span>
+                                <div><strong>Gợi ý:</strong> Dùng sort((a,b) => a-b)</div>
+                            </div>
+                            <button class="btn-run" onclick="sortIncrease()">
+                                <span>📈</span>
+                                <span>Sắp xếp</span>
+                            </button>
+                            <div class="result-container">
+                                <span id="txtIncrease">Kết quả sẽ hiển thị ở đây...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bài 8 -->
+                <div class="accordion-item-custom">
+                    <h2 class="accordion-header-custom">
+                        <button class="accordion-btn-custom collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ex8">
+                            <span class="number-badge">8</span>
+                            <span>Tìm số nguyên tố đầu tiên</span>
+                        </button>
+                    </h2>
+                    <div id="ex8" class="collapse" data-bs-parent=".custom-accordion">
+                        <div class="accordion-body-custom">
+                            <div class="hint-container">
+                                <span>💡</span>
+                                <div><strong>Gợi ý:</strong> Viết hàm isPrime(), duyệt và break khi tìm thấy</div>
+                            </div>
+                            <button class="btn-run" onclick="findPrime()">
+                                <span>⭐</span>
+                                <span>Tìm ngay</span>
+                            </button>
+                            <div class="result-container">
+                                <span id="txtPrime">Kết quả sẽ hiển thị ở đây...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bài 9 -->
+                <div class="accordion-item-custom">
+                    <h2 class="accordion-header-custom">
+                        <button class="accordion-btn-custom collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ex9">
+                            <span class="number-badge">9</span>
+                            <span>Đếm số nguyên</span>
+                        </button>
+                    </h2>
+                    <div id="ex9" class="collapse" data-bs-parent=".custom-accordion">
+                        <div class="accordion-body-custom">
+                            <div class="hint-container">
+                                <span>💡</span>
+                                <div><strong>Gợi ý:</strong> Dùng Number.isInteger()</div>
+                            </div>
+                            <div class="input-wrapper" style="margin-bottom: 1.5rem; padding: 1.5rem;">
+                                <div class="input-label" style="font-size: 1rem; margin-bottom: 0.75rem;">
+                                    <span>Nhập số (có thể thập phân):</span>
+                                </div>
+                                <div class="custom-input-group" style="margin-bottom: 0.75rem;">
+                                    <input type="number" step="any" class="custom-input" id="inputFloat" placeholder="Ví dụ: 3.14" style="padding: 0.875rem 1rem;">
+                                    <button class="btn-add" onclick="getFloat()" style="padding: 0.875rem 1.5rem;">
+                                        <span>➕</span>
+                                        <span>Thêm</span>
+                                    </button>
+                                </div>
+                                <div class="array-show" style="font-size: 0.95rem; min-height: 45px;">
+                                    <strong>Mảng:</strong>&nbsp;
+                                    <span id="txtArrayFloat">Chưa có dữ liệu</span>
+                                </div>
+                            </div>
+                            <button class="btn-run" onclick="findInt()">
+                                <span>🔢</span>
+                                <span>Đếm số nguyên</span>
+                            </button>
+                            <div class="result-container">
+                                <span id="txtInt">Kết quả sẽ hiển thị ở đây...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bài 10 -->
+                <div class="accordion-item-custom">
+                    <h2 class="accordion-header-custom">
+                        <button class="accordion-btn-custom collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ex10">
+                            <span class="number-badge">10</span>
+                            <span>So sánh số âm/dương</span>
+                        </button>
+                    </h2>
+                    <div id="ex10" class="collapse" data-bs-parent=".custom-accordion">
+                        <div class="accordion-body-custom">
+                            <div class="hint-container">
+                                <span>💡</span>
+                                <div><strong>Gợi ý:</strong> Đếm riêng rồi so sánh</div>
+                            </div>
+                            <button class="btn-run" onclick="compareNum()">
+                                <span>⚖️</span>
+                                <span>So sánh</span>
+                            </button>
+                            <div class="result-container">
+                                <span id="txtCompare">Kết quả sẽ hiển thị ở đây...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Footer -->
+            <div class="action-footer">
+                <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                    <button class="btn-clear" onclick="clearAll()">
+                        <span>🗑️</span>
+                        <span>Xóa mảng</span>
+                    </button>
+                    <button class="btn-reset" onclick="resetAll()">
+                        <span>🔄</span>
+                        <span>Tải lại</span>
+                    </button>
+                </div>
+                <div class="counter-badge">
+                    <span id="arrayLength">Số phần tử: 0</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./js/index.js"></script>
+</body>
+</html>
